@@ -4,6 +4,7 @@
 	"description": "A JavaScript evaluator bot for Telegram.",
 	"main": "./src/index.js",
 	"scripts": {
+		"lint": "eslint \"./**/*.js\"",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
@@ -27,5 +28,17 @@
 		"lodash.chunk": "^4.2.0",
 		"telegraf": "^3.34.1",
 		"vm2": "^3.8.4"
+	},
+	"eslintConfig": {
+		"extends": "eslint-config-haykam"
+	},
+	"devDependencies": {
+		"eslint": "^6.7.2",
+		"eslint-config-haykam": "^1.8.0",
+		"eslint-plugin-extra-rules": "0.0.0-development",
+		"eslint-plugin-html": "^6.0.0",
+		"eslint-plugin-json": "^1.4.0",
+		"eslint-plugin-markdown": "^1.0.1",
+		"eslint-plugin-unicorn": "^10.0.0"
 	}
 }
