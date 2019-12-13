@@ -61,7 +61,7 @@ if (search && search.config) {
 				await ctx.replyWithMarkdown(partialBlock);
 			}
 		} catch (error) {
-			if (!error.stack.includes("vm")) throw error;
+			if (error && error.stack && !error.stack.includes("vm")) throw error;
 			ctx.replyWithMarkdown("Failed to run that snippet. The error is as follows: " + codeBlock(error));
 		}
 	});
