@@ -21,5 +21,11 @@
 	"bugs": {
 		"url": "https://github.com/haykam821/Telegram-Evaluator/issues"
 	},
-	"homepage": "https://github.com/haykam821/Telegram-Evaluator#readme"
+	"homepage": "https://github.com/haykam821/Telegram-Evaluator#readme",
+	"dependencies": {
+		"cosmiconfig": "^6.0.0",
+		"lodash.chunk": "^4.2.0",
+		"telegraf": "^3.34.1",
+		"vm2": "^3.8.4"
+	}
 }
