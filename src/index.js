@@ -35,6 +35,8 @@ if (search && search.config) {
 		}
 
 		const msg = ctx.message.text;
+		if (!msg.startsWith("/eval ")) return ctx.reply("You must provide a JavaScript snippet to evaluate.");
+
 		const code = msg.replace("/eval ", "");
 
 		const vm = new VM({
