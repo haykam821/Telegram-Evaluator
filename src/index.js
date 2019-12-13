@@ -13,6 +13,11 @@ const search = {
 
 const chunk = require("lodash.chunk");
 
+/**
+ * Wraps text in a code block.
+ * @param {*} thing The thing to wrap in a code block.
+ * @returns {string} The code block-wrapped text.
+ */
 function codeBlock(thing) {
 	return "```\n" + thing.toString() + "\n```";
 }
@@ -56,10 +61,9 @@ if (search && search.config) {
 
 			// Long message fallback
 			ctx.replyWithMarkdown(notice);
-			const chunks = chunk(inspected, 4088)
-			for await (chunked of chunks) {
+			const chunks = chunk(inspected, 4088);
+			for await (const chunked of chunks) {
 				const partialBlock = codeBlock(chunked.join(""));
-				console.log(partialBlock)
 				await ctx.replyWithMarkdown(partialBlock);
 			}
 		} catch (error) {
