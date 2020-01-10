@@ -1,5 +1,7 @@
 const { cosmiconfigSync } = require("cosmiconfig");
+
 const Telegraf = require("telegraf");
+const commandParts = require("telegraf-command-parts");
 
 const { VM } = require("vm2");
 const { inspect } = require("util");
@@ -26,6 +28,7 @@ if (search && search.config) {
 	const config = search.config;
 
 	const bot = new Telegraf(config.token);
+	bot.use(commandParts());
 
 	bot.start(ctx => {
 		if (config.whitelist.includes(ctx.from.id)) {
@@ -39,16 +42,16 @@ if (search && search.config) {
 			return ctx.reply("You may not use this command.");
 		}
 
-		const msg = ctx.message.text;
-		if (!msg.startsWith("/eval ")) return ctx.reply("You must provide a JavaScript snippet to evaluate.");
-
-		const code = msg.replace("/eval ", "");
+		const code = ctx.state.command.args.trim();
+		if (code === "") {
+			return ctx.reply("You must provide a JavaScript snippet to evaluate.");
+		}
 
 		const vm = new VM({
 			timeout: 1000,
 		});
 		vm.freeze(ctx, "ctx");
-		vm.freeze(msg, "msg");
+		vm.freeze(ctx.message.text, "msg");
 
 		try {
 			const output = vm.run(code);
