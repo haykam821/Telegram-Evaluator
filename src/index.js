@@ -18,10 +18,11 @@ const chunk = require("lodash.chunk");
 /**
  * Wraps text in a code block.
  * @param {*} thing The thing to wrap in a code block.
+ * @param {boolean} tag Whether to include a JavaScript syntax highlighting tag.
  * @returns {string} The code block-wrapped text.
  */
-function codeBlock(thing) {
-	return "```\n" + thing.toString() + "\n```";
+function codeBlock(thing, tag) {
+	return "```" + (tag ? "js" : "") + "\n" + thing.toString() + "\n```";
 }
 
 if (search && search.config) {
@@ -58,7 +59,7 @@ if (search && search.config) {
 			const inspected = inspect(output);
 
 			const notice = "Snippet returned with the following value (type `" + typeof output + "`): ";
-			const fullBlock = codeBlock(inspected);
+			const fullBlock = codeBlock(inspected, true);
 
 			if ((notice + fullBlock).length < 4096) return ctx.replyWithMarkdown(notice + fullBlock);
 
