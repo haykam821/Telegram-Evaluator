@@ -1,6 +1,7 @@
 const { cosmiconfigSync } = require("cosmiconfig");
 
 const Telegraf = require("telegraf");
+const session = require("telegraf/session");
 const commandParts = require("telegraf-command-parts");
 
 const { VM } = require("vm2");
@@ -29,6 +30,7 @@ if (search && search.config) {
 	const config = search.config;
 
 	const bot = new Telegraf(config.token);
+	bot.use(session());
 	bot.use(commandParts());
 
 	bot.start(ctx => {
@@ -53,6 +55,9 @@ if (search && search.config) {
 		});
 		vm.freeze(ctx, "ctx");
 		vm.freeze(ctx.message.text, "msg");
+		if (ctx.session.lastOutput) {
+			vm.freeze(ctx.session.lastOutput, "last");
+		}
 
 		try {
 			const output = vm.run(code);
@@ -61,7 +66,10 @@ if (search && search.config) {
 			const notice = "Snippet returned with the following value (type `" + typeof output + "`): ";
 			const fullBlock = codeBlock(inspected, true);
 
-			if ((notice + fullBlock).length < 4096) return ctx.replyWithMarkdown(notice + fullBlock);
+			if ((notice + fullBlock).length < 4096) {
+				ctx.replyWithMarkdown(notice + fullBlock);
+				return ctx.session.lastOutput = output;
+			}
 
 			// Long message fallback
 			ctx.replyWithMarkdown(notice);
@@ -70,9 +78,11 @@ if (search && search.config) {
 				const partialBlock = codeBlock(chunked.join(""));
 				await ctx.replyWithMarkdown(partialBlock);
 			}
+			return ctx.session.lastOutput = output;
 		} catch (error) {
 			if (error && error.stack && !error.stack.includes("vm")) throw error;
 			ctx.replyWithMarkdown("Failed to run that snippet. The error is as follows: " + codeBlock(error));
+			return null;
 		}
 	});
 
